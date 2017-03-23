@@ -206,6 +206,7 @@ int ui_SensitivityValue;    // Provide clear value of the sensitivity
 int ui_DebounceValue;       // Provide a clear value of the debounce setting
 int ui_UpdateButton;  // Update button ID on Admin Tab
 int ui_UpdateStatus;    // Indicates if an update is pending
+int ui_monthlyReboots; // Displays the monthly reboot count
 int ui_dateTimeField;  // Text field on Current Tab
 int ui_hourlyField;    // Hour field ID for Houly Tab
 int ui_dailyField;     // Date feild ID for Hourly Tab
@@ -588,11 +589,13 @@ void createCurrentScreen() // This is the screen that displays current status in
     ui_chargeField = SimbleeForMobile.drawText(200,200," ");
     SimbleeForMobile.drawText(40, 220, "Counter Status:");
     ui_StartStopStatus = SimbleeForMobile.drawText(200, 220, " ");
+    SimbleeForMobile.drawText(40, 240, "Reboots: ");
+    ui_monthlyReboots = SimbleeForMobile.drawText(200, 240, " ");
     ui_adminLockIcon = SimbleeForMobile.drawText(40,290,"Admin Code:",RED);
     ui_adminAccessField = SimbleeForMobile.drawTextField(132,285,80,adminAccessInput);
     //ui_sendCloudSwitch = SimbleeForMobile.drawButton(70,400,150,"Send to Cloud");
     //SimbleeForMobile.setEvents(ui_sendCloudSwitch,EVENT_PRESS);
-    snprintf(IDBuffer, 35,"%s - %s at version: %s",DEVICENAME,SERVICENAME,SOFTWARERELEASENUMBER);   // Identifies Device on Current screen
+    snprintf(IDBuffer, 36,"%s - %s v%s",DEVICENAME,SERVICENAME,SOFTWARERELEASENUMBER);   // Identifies Device on Current screen
     SimbleeForMobile.drawText(10,(SimbleeForMobile.screenHeight-20),IDBuffer);
     SimbleeForMobile.endScreen();
 }
@@ -637,6 +640,8 @@ void updateCurrentScreen() // Since we have to update this screen three ways: cr
         SimbleeForMobile.updateText(ui_StartStopStatus, "Running");
     }
     else SimbleeForMobile.updateText(ui_StartStopStatus, "Stopped");
+    
+    SimbleeForMobile.updateValue(ui_monthlyReboots, FRAMread8(MONTHLYREBOOTCOUNT));  // Display the current reboot count
     
     if (adminUnlocked) {
         SimbleeForMobile.updateValue(ui_adminAccessField,adminAccessInput);
